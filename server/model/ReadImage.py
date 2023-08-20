@@ -2,7 +2,6 @@ import os
 import cv2 as cv
 import numpy as np 
 import imutils
-from tensorflow.python.keras.models import load_model
 from imutils.perspective import four_point_transform
 from skimage.segmentation import clear_border
 import model.Model as model 
@@ -90,7 +89,7 @@ def localize(img):
             isDigit = existsDigit(cells[i][j])
             if isDigit: 
                 # Predicts the value of the digit 
-                board[i][j] = model.predict(cells[i][j], debug)
+                board[i][j] = model.predict(cells[i][j], debug=debug)
                 if board[i][j] == -1: #Unreadable digit 
                     return [False]
 
@@ -110,50 +109,3 @@ def existsDigit(cell):
 def display(msg, img):
     cv.imshow(msg, img)
     cv.waitKey(0)
-
-def test():
-    myFile = 'Sudoku#1.png' #Sudoku puzzle #1
-    myFile = 'Sudoku#2.png' #Sudoku puzzle #2
-    myFile = 'Sudoku#3.png' #Sudoku puzzle #3
-    myFile = 'Sudoku#4.png' #Sudoku puzzle #4
-    myFile = 'Sudoku#1.png' #Sudoku puzzle #1
-    img = cv.imread(myFile)
-    findBoard(img)
-
-def getColors():
-   filename = 'Seven.png' 
-   parent = os.getcwd()
-   target = os.path.join(parent, 'digits')
-   digit = cv.imread("/".join([target, filename]))
-   #Convert digit from (64, 64, 3) to (64, 64)
-   digit = model.adjustShape(digit)
-   # apply automatic thresholding to the cell and then clear any
-   #  connected borders that touch the border of the cell
-   thresh = cv.threshold(digit, 0, 255, cv.THRESH_BINARY_INV | cv.THRESH_OTSU)[1]
-   digit = clear_border(thresh)
-   for i in range(0, len(digit)):
-        for j in range(0, len(digit[i])):
-            if(digit[i][j] != 0):
-                print(digit[i][j])
-
-def getAreas():
-    parent = os.getcwd()
-    target = os.path.join(parent, 'digits')
-    # Initalize a list of errors 
-    errors = []
-    for filename in model.digits: 
-        # Reads each digit 
-        digit = cv.imread("/".join([target, filename]))
-        #Convert digit from (64, 64, 3) to (64, 64)
-        digit = model.adjustShape(digit)
-        # apply automatic thresholding to the cell and then clear any
-        # connected borders that touch the border of the cell
-        thresh = cv.threshold(digit, 0, 255, cv.THRESH_BINARY_INV | cv.THRESH_OTSU)[1]
-        digit = clear_border(thresh)
-        errors.append(model.whiteArea(digit))
-    print(errors)
-
-if debug:
-    test() 
-    # getColors()
-    # getAreas()

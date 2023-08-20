@@ -2,7 +2,39 @@ import os
 import cv2 as cv
 import numpy as np 
 from skimage.segmentation import clear_border
+import torch
 from PIL import Image
+from torchvision import datasets, transforms
+
+
+def loadModel(modelPath):
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model = torch.load(modelPath)
+    model.to(device)
+    model.eval()  # Set the model to evaluation mode
+    return model
+
+def predict(cell, model=None, debug=False):
+    return meanSquaredError(cell, debug)
+    # return pytorchPredict(cell, model, debug)
+
+def pytorchPredict(cell, model=None, debug=False):
+    if model is None:
+        return 0
+    cellTensor = torch.tensor(np.expand_dims(cell.astype('float32'), axis=2))
+    inputCell = cellTensor[0].view(1, 784)
+
+    with torch.no_grad():
+        logps = model(inputCell)
+
+    ps = torch.exp(logps)
+    probab = list(ps.numpy()[0])
+    output = probab.index(max(probab))
+    print(probab)
+    print("Predicted Digit =", output)
+    
+    return output
+    # return meanSquaredError(cell, debug)
 
 digits = [
     'One.png',
@@ -18,12 +50,13 @@ digits = [
 
 # Predicts similarity between cell and other images based on mean squared error 
 # Returns -1 if digit is not readable or if min error is the same across multiple digits
-def predict(cell, debug=False):
+def meanSquaredError(cell, debug=False):
     # Locates the uploaded image. 
     if debug:
         parent = os.getcwd()
     else:
         parent = os.path.join(os.getcwd(), 'model')
+
     target = os.path.join(parent, 'digits')
     # Initalize a list of errors 
     errors = []
