@@ -21,8 +21,7 @@ A Flask/React application that takes an image of an unsolved sudoku puzzle as in
 6. The user also has the option of manually filling a Sudoku Grid by clicking on 'Fill in the grid instead'.
 
 ## Screenshots of Project
-<img width="1429" alt="image" src="https://github.com/Jerry-spec-code/OpenCV-Sudoku-Solver/assets/78711575/8f6897c5-9dd5-4e27-b10a-cec3d69f1565">
-
+<img width="1431" alt="image" src="https://github.com/Jerry-spec-code/OpenCV-Sudoku-Solver/assets/78711575/b61326c5-51d4-4275-b1a2-fa4f73b3b7f9">
 
 ### Installing required pip packages: Run the commands below 
 
