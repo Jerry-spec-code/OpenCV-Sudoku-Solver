@@ -4,6 +4,7 @@ import Btn from "../components/Button/Button";
 import ROUTES from "../config/api";
 import SudokuGrid from "../components/SudokuGrid/SudokuGrid";
 import axios, { AxiosResponse, AxiosError }  from 'axios';
+import { Grid } from "@mui/material";
 
 type Solution = {
     valid : boolean;
@@ -19,6 +20,7 @@ const Home = () => {
     const [solveGrid, setSolveGrid] = useState(false);
     const [data, setData] = useState<Solution | null>(null);
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [message, setMessage] = useState('');
     const [grid, setGrid] = useState(initialGrid);
     const [showGrid, setShowGrid] = useState(false);
@@ -28,8 +30,16 @@ const Home = () => {
       const file = event.target.files?.[0];
       if (file) {
         setSelectedImage(file);
+
+        // Create a URL for the selected image
+        const imageURL = URL.createObjectURL(file);
+        setImagePreview(imageURL);
       }
     };
+
+    const convertStringsToNumbers = (array: string[][]): number[][] => {
+        return array.map(row => row.map(cell => parseInt(cell)));
+    }
 
     useEffect(() => {
         if (solve) {
@@ -43,7 +53,7 @@ const Home = () => {
                     if (data.status === "success") {
                         setData(data);
                         if (data.valid) {
-                            setGrid(data.solution);
+                            setGrid(convertStringsToNumbers(data.solution));
                             setShowGrid(true);
                         }
                         setMessage(data.message);
@@ -99,9 +109,17 @@ const Home = () => {
 
     const ShowGrid = () => {
         return <>
-            <SudokuGrid grid={grid} setGrid={setGrid} message={message} setMessage={setMessage}/>
-            <br />
-            <Btn clicked={solveGrid} setClicked={setSolveGrid} text={"Solve Grid!"}/>
+        <Grid container spacing={1}>
+            <Grid item xs={4}>
+                <br /><br /><br /><br />
+                {imagePreview && <img src={imagePreview} alt="Preview" style={{ maxWidth: '100%', height: 'auto' }}/>}
+            </Grid>
+            <Grid item xs={4}>
+                <SudokuGrid grid={grid} setGrid={setGrid} message={message} setMessage={setMessage}/>
+                <br />
+                <Btn clicked={solveGrid} setClicked={setSolveGrid} text={"Solve Grid!"}/>
+            </Grid>
+        </Grid>
         </>
     }
 

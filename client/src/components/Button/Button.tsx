@@ -10,13 +10,15 @@ type Props = {
 }
 
 const Btn = ({clicked, setClicked, text} : Props) => {
+  const widthPercentage = text == 'Solve Grid!' ? "40%" : "10%";
+  const marginLeftPx = text == 'Solve Grid!' ? "2px" : "10px";
   return (
     <div>   
-      <Button disabled={clicked} variant="contained" color="primary" sx={{textTransform: "None", width: "10%"}} onClick={() => setClicked(true)}>
+      <Button disabled={clicked} variant="contained" color="primary" sx={{textTransform: "None", width: widthPercentage}} onClick={() => setClicked(true)}>
         <Typography sx={{ fontSize: "large"}}>
             {text}
         </Typography>
-        {clicked && <CircularProgress sx={{ ml : "10px"}} color="primary" />}
+        {clicked && <CircularProgress sx={{ ml : marginLeftPx}} color="primary" />}
       </Button>
     </div>
   )
