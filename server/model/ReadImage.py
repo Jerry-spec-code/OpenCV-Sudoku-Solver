@@ -9,7 +9,7 @@ import model.Model as model
 
 debug = False  
 
-def myImageRead(filename):
+def readImage(filename):
     try:
         # Locates the uploaded image. 
         parent = os.path.join(os.getcwd(), 'model')

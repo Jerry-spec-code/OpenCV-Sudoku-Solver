@@ -14,7 +14,7 @@ class Solution():
 
 
 def imageSolve(filename):
-    read = r.myImageRead(filename)
+    read = r.readImage(filename)
     if len(read) == 1:
         return Solution(message = 'Unreadable image')
 
@@ -45,9 +45,9 @@ def javaSolve():
         jpype.startJVM(convertStrings=False)
     solver = JClass('App')
     solver.main(['arg'])
-    return myRead('answer.txt')
+    return readFromFile('answer.txt')
 
-def myRead(filename):
+def readFromFile(filename):
     data = []
     with open(filename, 'r') as file:
         for line in file: 
