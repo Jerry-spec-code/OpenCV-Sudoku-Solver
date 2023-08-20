@@ -125,7 +125,8 @@ const Home = () => {
 
     return <div>
         <Link to="/gridSolver">Fill in the grid instead</Link>
-        <br /><br />
+        <br />
+        <p>Upload an image of an unsolved sudoku puzzle</p>
         <input style={{ marginLeft: '75px' }} type="file" accept="image/*" onChange={handleImageChange} />
         <br /><br />
         <Btn clicked={solve} setClicked={setSolve} text={'Solve!'} />
