@@ -1,12 +1,16 @@
 # OpenCV-Sudoku-Solver
 
 # What is it?
-The computer vision sudoku solver is a web application that takes an image of an unsolved sudoku puzzle as input and outputs a valid solution using Flask to deploy the application on Google App Engine. 
+A Flask/React application that takes an image of an unsolved sudoku puzzle as input and outputs a valid solution.
 
-## Languages used: 
+## Languages/Frameworks used: 
 1. Python
-2. Java
+2. TypeScript
 3. HTML/CSS
+4. Java
+5. Flask
+6. React
+7. Material-UI
 
 ## Key features: 
 1. The user uploads an image of an unsolved sudoku puzzle and clicks 'solve' when uploaded. 
@@ -17,31 +21,40 @@ The computer vision sudoku solver is a web application that takes an image of an
 6. The user also has the option of manually filling a Sudoku Grid by clicking on 'Fill in the grid instead'.
 
 ## Screenshots of Project
-<img width="1440" alt="image" src="https://user-images.githubusercontent.com/78711575/171978390-3a4bd32d-c60f-4b77-ac74-9fb6af7caa90.png">
-<img width="1434" alt="image" src="https://user-images.githubusercontent.com/78711575/170419328-596ba3f7-8ade-41ac-87f2-ad415b42a27a.png">
-<img width="1427" alt="image" src="https://user-images.githubusercontent.com/78711575/170393835-1e5b7e20-1570-4e38-99b8-1ce9001c3a3e.png">
-<img width="1429" alt="image" src="https://user-images.githubusercontent.com/78711575/170393844-cd466712-35b3-4d4a-bcf9-89e4bb08e391.png">
-
-## Tools/Frameworks: 
-1. Flask
-2. OpenCV
-3. Jpype 
+<img width="1439" alt="image" src="https://github.com/Jerry-spec-code/OpenCV-Sudoku-Solver/assets/78711575/f0aee7a0-e23e-487b-8112-36ab8206cfe4">
 
 ### Installing required pip packages: Run the commands below 
 
 ```sh
-cd ./src
+cd ./server
 python3 -m venv venv (Set up the virtual environment)
 . venv/bin/activate  (Activate the virtual environment)
 pip3 install -r requirements.txt (install the required packages)
 ```
 
-### How to run this project?  
+### Backend Flask Setup
 
 ```sh
-cd ./src
+cd ./server
 javac App.java (Compiles the java code)
 python3 App.py 
 ```
 
-Open http://127.0.0.1:5000/ to view the app in your browser.
+### Frontend React Setup
+
+```sh
+cd ./client
+npm install
+npm start
+```
+
+This will run the application on port 3000. Open http://localhost:3000 to view it in your browser.
+
+##  Frontend Environment variables 
+
+| Variable    | Description                                 |
+| ----------- | ------------------------------------------- |
+| NODE_ENV    | `development`                               |
+
+Note: Frontend Environment variables can be supplied via a `.env` file in the client directory. See  `./client/example.env` for an example 
+
