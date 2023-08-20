@@ -1,7 +1,7 @@
 .DS_Store
 *.txt
 *.class
-*.png
+*server/model/src
 *Test.py
 
 # Byte-compiled / optimized / DLL files

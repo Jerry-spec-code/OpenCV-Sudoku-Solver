@@ -57,7 +57,7 @@ def meanSquaredError(cell, debug=False):
     else:
         parent = os.path.join(os.getcwd(), 'model')
 
-    target = os.path.join(parent, 'digits')
+    target = os.path.join(parent, 'data', 'digits')
     # Initalize a list of errors 
     errors = []
     for filename in digits: 
