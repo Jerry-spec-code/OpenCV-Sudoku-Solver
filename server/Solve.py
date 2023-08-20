@@ -6,16 +6,24 @@ import model.ReadImage as r
 import os
 import shutil
 
-def solve(filename):
+class Solution():
+    def __init__(self, valid=False, solution=[[0] * 9 for _ in range(9)], message=''):
+        self.valid = valid
+        self.solution = solution
+        self.message = message
+
+
+def imageSolve(filename):
     read = r.myImageRead(filename)
     if len(read) == 1:
-        return [False, 'Unreadable image']
+        return Solution(message = 'Unreadable image')
 
     writeToFile(read, 'board.txt')
     result = javaSolve()
-    if not result[0]:
-        result.insert(1, read)
-        result[2] += ' But here is the interpretation of the image! '
+    if not result.valid:
+        result.solution = read.tolist()
+        result.message += ' But here is the interpretation of the image! Edit the board as you see fit'
+        result.valid = True
     return result
 
 def gridSolve(inputList): 
@@ -51,14 +59,14 @@ def myRead(filename):
 
     status = getStatus()
     
-    if status == 'invalid':
-        return [False, 'Invalid puzzle!']
-
-    return [True, data, getMessage(status)]
+    return Solution(message = getMessage(status)) if status == 'invalid' else Solution(valid = True, solution = data, message = getMessage(status))
 
 def getMessage(status):
     if status == 'complete':
         return 'Here is the solved puzzle:'
+
+    elif status == 'invalid':
+        return 'Invalid puzzle!'
     
     return 'This puzzle has multiple solutions. Here is one solution:'
 
@@ -75,7 +83,7 @@ def validPhrase(word):
     
     return False
 
-def setTargetPath():
+def getTargetPath():
     parent = os.path.join(os.getcwd(), 'model')
     target = os.path.join(parent, 'src')
     if not os.path.isdir(target):

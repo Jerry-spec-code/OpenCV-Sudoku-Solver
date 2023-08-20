@@ -33,9 +33,11 @@ const getBorderStyling = (rowIndex : number, colIndex : number) => {
 type Props = {
   grid : number[][];
   setGrid : (args :  number[][]) => void;
+  message : string;
+  setMessage : (args : string) => void;
 };
 
-const SudokuGrid = ({grid, setGrid} : Props) => {
+const SudokuGrid = ({grid, setGrid, message, setMessage} : Props) => {
 
   const handleCellChange = (row : number, col : number, value : number) => {
     const newGrid = [...grid];
@@ -43,7 +45,19 @@ const SudokuGrid = ({grid, setGrid} : Props) => {
     setGrid(newGrid);
   };
 
+  const handleClearBoard = () => {
+    const initialGrid = Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => 0));
+    setGrid(initialGrid);
+    setMessage('');
+  };
+
   return (
+    <>
+      <button onClick={handleClearBoard}>
+          Clear board
+      </button>
+      <br />
+      {message == '' ? <br /> : <p>{message}</p>}
     <StyledGridContainer container spacing={0}>
       {grid.map((row, rowIndex) => (
         <Grid container item key={rowIndex} justifyContent="center">
@@ -62,6 +76,7 @@ const SudokuGrid = ({grid, setGrid} : Props) => {
         </Grid>
       ))}
     </StyledGridContainer>
+    </>
   );
 };
 
