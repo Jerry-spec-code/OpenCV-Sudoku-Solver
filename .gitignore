@@ -2,6 +2,7 @@
 *.txt
 *.class
 *server/model/src
+!requirements.txt
 *Test.py
 
 # Byte-compiled / optimized / DLL files
