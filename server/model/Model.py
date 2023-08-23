@@ -6,6 +6,17 @@ import torch
 from PIL import Image
 from torchvision import datasets, transforms
 
+digits = [
+    'One',
+    'Two',
+    'Three',
+    'Four',
+    'Five',
+    'Six',
+    'Seven',
+    'Eight',
+    'Nine'
+]
 
 def loadModel(modelPath):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -16,7 +27,9 @@ def loadModel(modelPath):
 
 def predict(cell, model=None, debug=False):
     return meanSquaredError(cell, debug)
+    # return meanSquaredErrorPOC(cell, debug)
     # return pytorchPredict(cell, model, debug)
+
 
 def pytorchPredict(cell, model=None, debug=False):
     if model is None:
@@ -36,18 +49,6 @@ def pytorchPredict(cell, model=None, debug=False):
     return output
     # return meanSquaredError(cell, debug)
 
-digits = [
-    'One.png',
-    'Two.png',
-    'Three.png',
-    'Four.png',
-    'Five.png',
-    'Six.png',
-    'Seven.png',
-    'Eight.png',
-    'Nine.png'
-]
-
 # Predicts similarity between cell and other images based on mean squared error 
 # Returns -1 if digit is not readable or if min error is the same across multiple digits
 def meanSquaredError(cell, debug=False):
@@ -57,10 +58,49 @@ def meanSquaredError(cell, debug=False):
     else:
         parent = os.path.join(os.getcwd(), 'model')
 
+    target = os.path.join(parent, 'data', 'processed')
+
+    allErrors = []
+    for i, _ in enumerate(digits):
+        curTarget = os.path.join(target, str(i + 1))
+        sortedFiles = sorted(os.listdir(curTarget))
+        digitErrors = []
+        for filename in sortedFiles:
+            digit = cv.imread("/".join([curTarget, filename]))
+            digit = np.mean(digit, axis=2)
+            # Calculates mean squared error 
+            err = np.sum((digit.astype("float") - cell.astype("float")) ** 2)
+            err /= float(digit.shape[0] * digit.shape[1])
+            digitErrors.append(err)
+        allErrors.append(digitErrors)
+
+    minErrorDigit = -1 # Default value 
+
+    # Determines which digit has minimum mean squared error
+    for i, digitErrors in enumerate(allErrors):
+        for j, err in enumerate(digitErrors):
+            if (i == 0 and j == 0) or (minError > err and err >= 0):
+                minErrorDigit = i + 1
+                minError = err 
+            elif err < 0:
+                return -1 
+
+    return minErrorDigit 
+
+# Predicts similarity between cell and other images based on mean squared error 
+# Returns -1 if digit is not readable or if min error is the same across multiple digits
+def meanSquaredErrorPOC(cell, debug=False):
+    # Locates the uploaded image. 
+    if debug:
+        parent = os.getcwd()
+    else:
+        parent = os.path.join(os.getcwd(), 'model')
+
     target = os.path.join(parent, 'data', 'digits')
     # Initalize a list of errors 
     errors = []
-    for filename in digits: 
+    for name in digits:
+        filename = name + '.png'
         # Reads each digit 
         digit = cv.imread("/".join([target, filename]))
         #Convert digit from (64, 64, 3) to (64, 64)

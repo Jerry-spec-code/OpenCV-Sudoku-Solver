@@ -16,7 +16,8 @@ def readImage(filename):
         img = cv.imread("/".join([target, filename]))
         return findBoard(img)
     
-    except:
+    except Exception as e:
+        print(e)
         return [False]
 
 def findBoard(img):
@@ -89,6 +90,7 @@ def localize(img):
             isDigit = existsDigit(cells[i][j])
             if isDigit: 
                 # Predicts the value of the digit 
+                # saveDigitAsImage(cells[i][j], i, j)
                 board[i][j] = model.predict(cells[i][j], debug=debug)
                 if board[i][j] == -1: #Unreadable digit 
                     return [False]
@@ -105,6 +107,13 @@ def existsDigit(cell):
 
     # Returns true if there is a digit, false otherwise. 
     return not len(cnts) == 0 
+
+def saveDigitAsImage(cell, i, j):
+    parent = os.path.join(os.getcwd(), 'model')
+    target = os.path.join(parent, 'data', 'processed', 'pending')
+    filename = str(i) + str(j) + '.png'
+    cv.imwrite("/".join([target, filename]), cell)
+
 
 def display(msg, img):
     cv.imshow(msg, img)
