@@ -1,5 +1,8 @@
 # OpenCV-Sudoku-Solver
 
+# Project Demo:
+https://youtu.be/vm5mjRRbf_k
+
 # What is it?
 A Flask/React application that takes an image of an unsolved sudoku puzzle as input and outputs a valid solution.
 
