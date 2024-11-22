@@ -31,10 +31,10 @@ class Board:
 
     def solve(self):
         logic_functions = [
-            lambda : self.get_status(),
-            lambda : self.logic_cycle_one(),
-            lambda : self.logic_cycle_two(),
-            lambda : self.guesser(),
+            self.get_status,
+            self.logic_cycle_one,
+            self.logic_cycle_two,
+            self.guesser,
         ]
 
         status = Status.INCOMPLETE
