@@ -4,6 +4,7 @@
 *server/model/src
 !requirements.txt
 *Test.py
+*.java
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
