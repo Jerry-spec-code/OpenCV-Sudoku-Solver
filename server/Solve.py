@@ -1,89 +1,41 @@
-from re import S
-import jpype
-import jpype.imports
-from jpype import JClass
 import model.ReadImage as r 
 import os
 import shutil
 
-class Solution():
-    def __init__(self, valid=False, solution=[[0] * 9 for _ in range(9)], message=''):
-        self.valid = valid
-        self.solution = solution
-        self.message = message
+from Board import Board
+from Status import Status
+from Response import Success
 
+def image_solve(filename):
+    board = r.readImage(filename).tolist()
+    if len(board) == 1:
+        return Success(message='Unreadable image')
 
-def imageSolve(filename):
-    read = r.readImage(filename)
-    if len(read) == 1:
-        return Solution(message = 'Unreadable image')
-
-    writeToFile(read, 'board.txt')
-    result = javaSolve()
+    result = grid_solve(board)
     if not result.valid:
-        result.solution = read.tolist()
+        result.solution = board
         result.message += ' But here is the interpretation of the image! Edit the board as you see fit'
         result.valid = True
     return result
 
-def gridSolve(inputList): 
-    writeToFile(inputList, 'board.txt')
-    return javaSolve()
+def grid_solve(board):
+    board_obj = Board(board)
+    status = board_obj.solve()
+    message = get_message(status)
+    valid = Status != Status.INVALID
+    solution = board_obj.get_board_numbers()
+    result = Success(valid=valid, solution=solution, message=message)
+    return result
 
-def writeToFile(inputList, filename):
-    with open(filename, 'w') as f:
-        for row in inputList:
-            for elem in row:
-                f.write(str(elem) + " ")
-            f.write("\n")
-        
-    f.close()
+def get_message(status):
+    message_dict = {
+        Status.COMPLETE: 'Here is the solved puzzle:',
+        Status.INVALID: 'Invalid puzzle!',
+        Status.MULTIPLE: 'This puzzle has multiple solutions. Here is one solution:'
+    }
+    return message_dict[status] if status in message_dict else 'Unknown Error During Solve'
 
-# Calls the java code 
-def javaSolve():
-    if not jpype.isJVMStarted():
-        jpype.startJVM(convertStrings=False)
-    solver = JClass('App')
-    solver.main(['arg'])
-    return readFromFile('answer.txt')
-
-def readFromFile(filename):
-    data = []
-    with open(filename, 'r') as file:
-        for line in file: 
-            temp = []
-            for word in line.split(' '):
-                if validPhrase(word):
-                    temp.append(word.strip())
-            data.append(temp)
-
-    status = getStatus()
-    
-    return Solution(message = getMessage(status)) if status == 'invalid' else Solution(valid = True, solution = data, message = getMessage(status))
-
-def getMessage(status):
-    if status == 'complete':
-        return 'Here is the solved puzzle:'
-
-    elif status == 'invalid':
-        return 'Invalid puzzle!'
-    
-    return 'This puzzle has multiple solutions. Here is one solution:'
-
-def getStatus():
-    with open('status.txt', 'r') as file:
-        for line in file: 
-            for word in line.split(' '):
-                return word 
-
-def validPhrase(word):
-    for letter in word:
-        if letter != ' ' and letter != '\n':
-            return True
-    
-    return False
-
-def getTargetPath():
+def get_target_path():
     parent = os.path.join(os.getcwd(), 'model')
     target = os.path.join(parent, 'src')
     if not os.path.isdir(target):

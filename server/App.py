@@ -1,7 +1,8 @@
 from werkzeug.utils import secure_filename
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from Solve import imageSolve, gridSolve, getTargetPath
+from Solve import image_solve, grid_solve, get_target_path
+from Response import Error
 
 app = Flask(__name__)
 CORS(app)
@@ -9,24 +10,24 @@ CORS(app)
 @app.route('/api/gridSolver', methods=['POST'])
 def grid(): 
     data = request.json
-    result = gridSolve(data['grid'])
-    return jsonify({ 'status' : 'success', 'valid' : result.valid, 'solution' : result.solution, 'message' : result.message })
+    result = grid_solve(data['grid'])
+    return jsonify(result.to_dict())
 
 @app.route('/api/imageSolver', methods=['POST'])
 def image():
     if 'image' not in request.files:
-        return jsonify({'status' : 'fail', 'error': 'No image part'})
+        return jsonify(Error(error='No image part').to_dict())
     
     image = request.files['image']
     
     if image.filename == '':
-        return jsonify({'status' : 'fail', 'error': 'No selected file'})
+        return jsonify(Error(error='No selected file').to_dict())
 
-    target = getTargetPath()
+    target = get_target_path()
     filename = secure_filename(image.filename)
     image.save("/".join([target, filename]))
-    result = imageSolve(filename)
-    return jsonify({ 'status' : 'success', 'valid' : result.valid, 'solution' : result.solution, 'message' : result.message })
+    result = image_solve(filename)
+    return jsonify(result.to_dict())
 
 if __name__ == '__main__':
     app.run(debug=True)

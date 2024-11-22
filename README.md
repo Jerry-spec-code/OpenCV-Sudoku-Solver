@@ -10,17 +10,16 @@ A Flask/React application that takes an image of an unsolved sudoku puzzle as in
 1. Python
 2. TypeScript
 3. HTML/CSS
-4. Java
-5. Flask
-6. React
-7. Material-UI
+4. Flask
+5. React
+6. Material-UI
 
 ## Key features: 
 1. The user uploads an image of an unsolved sudoku puzzle and clicks 'solve' when uploaded. 
 2. The program outputs 'invalid puzzle' if the image is not a readable sudoku puzzle. 
-3. The program uses OpenCV and a custom OCR machine learning model to read the image and output the corresponding puzzle to a text file. 
-4. Afterwards, the program uses Jpype to connect the python code to a custom backend Java API that solve the puzzle using 3 optimized solving algorithms.
-5. The solution is then outputted to a text file which is then read via python and displayed via HTML/CSS, also identifying puzzles with multiple solutions. 
+3. The program uses OpenCV and a custom OCR machine learning model to read the image. 
+4. Afterwards, the program solves the puzzle using 3 optimized logical deduction/backtracking algorithms.
+5. The solution is then displayed on the frontend via React, also identifying puzzles with multiple solutions. 
 6. The user also has the option of manually filling a Sudoku Grid by clicking on 'Fill in the grid instead'.
 
 ## Screenshots of Project
@@ -39,7 +38,6 @@ pip3 install -r requirements.txt (install the required packages)
 
 ```sh
 cd ./server
-javac App.java (Compiles the java code)
 python3 App.py 
 ```
 

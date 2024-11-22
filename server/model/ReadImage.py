@@ -98,7 +98,7 @@ def localize(img):
     if debug:
         print(board)
         
-    return board.astype(str)
+    return board.astype(int)
 
 def existsDigit(cell): 
     # find contours in the thresholded cell
