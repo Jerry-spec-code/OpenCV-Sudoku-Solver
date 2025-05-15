@@ -13,6 +13,7 @@ A Flask/React application that takes an image of an unsolved sudoku puzzle as in
 4. Flask
 5. React
 6. Material-UI
+7. Makefile
 
 ## Key features: 
 1. The user uploads an image of an unsolved sudoku puzzle and clicks 'solve' when uploaded. 
@@ -25,32 +26,6 @@ A Flask/React application that takes an image of an unsolved sudoku puzzle as in
 ## Screenshots of Project
 <img width="1431" alt="image" src="https://github.com/Jerry-spec-code/OpenCV-Sudoku-Solver/assets/78711575/b61326c5-51d4-4275-b1a2-fa4f73b3b7f9">
 
-### Installing required pip packages: Run the commands below 
-
-```sh
-cd ./server
-python3 -m venv venv (Set up the virtual environment)
-. venv/bin/activate  (Activate the virtual environment)
-pip3 install -r requirements.txt (install the required packages)
-```
-
-### Backend Flask Setup
-
-```sh
-cd ./server
-python3 App.py 
-```
-
-### Frontend React Setup
-
-```sh
-cd ./client
-npm install
-npm start
-```
-
-This will run the application on port 3000. Open http://localhost:3000 to view it in your browser.
-
 ##  Frontend Environment variables 
 
 | Variable    | Description                                 |
@@ -59,3 +34,18 @@ This will run the application on port 3000. Open http://localhost:3000 to view i
 
 Note: Frontend Environment variables can be supplied via a `.env` file in the client directory. See  `./client/example.env` for an example 
 
+
+## Project Setup
+
+To run the project, you will need to open two separate terminals.
+- In the first terminal, run `make backend`. This will install all the Python packages in a virtual environment and run the server on port 5000.
+- In the second terminal, run `make frontend`. This will install all the TypeScript packages and run the application on port 3000. Open http://localhost:3000 to view the result in your browser.
+
+### Other Make Commands
+| Command                  | Description                                                   |
+| -----------------------  | ------------------------------------------------------------- |
+| `make install_frontend`  | Install all the frontend TypeScript packages                  |
+| `make start_frontend`    | Start the frontend without installing packages                |
+| `make install_backend`   | Setup virtual environment and install backend Python packages |
+| `make start_backend`     | Start the server without installing packages                  |
+| `make clean_backend`     | Destroys the virtual environment and removes Python packages  |

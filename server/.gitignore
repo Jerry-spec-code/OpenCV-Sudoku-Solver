@@ -1,10 +1,13 @@
 .DS_Store
-*.txt
 *.class
 *server/model/src
 !requirements.txt
 *Test.py
 *.java
+*.png
+*.jpeg
+*.jpg
+*.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
