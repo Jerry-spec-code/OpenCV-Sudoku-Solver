@@ -24,8 +24,8 @@ install_backend::
 	&& $(ACTIVATE_VENV) \
 	&& $(PYTHON3_EXE) -m pip install --no-deps --no-cache-dir -r requirements.txt)
 
-run_backend::
+start_backend::
 	(cd ./server && $(ACTIVATE_VENV) && $(PYTHON3_EXE) app.py)
 
 backend::
-	make install_backend && make run_backend
+	make install_backend && make start_backend
