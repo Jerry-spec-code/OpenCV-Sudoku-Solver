@@ -7,6 +7,8 @@ class Board:
         self.rows = len(board)
         self.cols = len(board[0])
         self.board = [[Cell(board[i][j], i, j) for j in range(self.cols)] for i in range(self.rows)]
+        self.update_operations = []
+        self.disable_updates = False
         self.initialize_neighbours(self.board)
 
     def initialize_neighbours(self, board : List[List['Cell']]):
@@ -65,6 +67,7 @@ class Board:
                 cell.remove_possible(cur_cell.value)
                 if cell.only_one_possible():
                     cell.value = cell.get_possible_value()
+                    self.update_operations_with_add(cell)
                     self.remove_possibility_from_neighbours(cell)
 
 
@@ -77,6 +80,7 @@ class Board:
                     for possible in cur_cell.possible:
                         if not cur_cell.possible_exists_in_all_neighbour_types(possible):
                             cur_cell.value = possible
+                            self.update_operations_with_add(cur_cell)
                             self.remove_possibility_from_neighbours(cur_cell)
                             break
         
@@ -93,6 +97,8 @@ class Board:
                     possible_list = list(cur_cell.possible)
                     for possible in possible_list:
                         cur_cell.value = possible
+                        next_index = len(self.update_operations)
+                        self.update_operations_with_add(cur_cell)
                         old_board[i][j].remove_possible(possible) # Since we are going to guess it
                         status = self.solve()
                         if status == Status.MULTIPLE:
@@ -100,10 +106,21 @@ class Board:
                         if status == Status.COMPLETE: # First valid guess
                             return self.check_multiple_solutions(old_board)
                         self.board = self.copy_board(old_board)
+                        self.update_operations_with_delete(next_index)
                     
                     return Status.INVALID
                     
         return self.get_status()
+
+    def update_operations_with_add(self, cell : Cell):
+        if not self.disable_updates:
+            self.update_operations.append(('add', cell.x, cell.y, cell.value))
+
+    def update_operations_with_delete(self, start_index):
+        if not self.disable_updates:
+            for i in range(len(self.update_operations) - 1, start_index - 1, -1):
+                _, x, y, value = self.update_operations[i]
+                self.update_operations.append(('delete', x, y, value))
 
     def bucket_sort_empty_cells_by_possibilities(self):
         buckets = [[] for _ in range(10)]
@@ -115,6 +132,7 @@ class Board:
         return buckets
 
     def check_multiple_solutions(self, old_board):
+        self.disable_updates = True
         possible_board = self.copy_board(self.board)
         self.board = self.copy_board(old_board)
         status = self.solve()

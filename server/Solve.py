@@ -24,7 +24,7 @@ def grid_solve(board):
     message = get_message(status)
     valid = Status != Status.INVALID
     solution = board_obj.get_board_numbers()
-    result = Success(valid=valid, solution=solution, message=message)
+    result = Success(valid=valid, original=board, solution=solution, updates=board_obj.update_operations, message=message)
     return result
 
 def get_message(status):

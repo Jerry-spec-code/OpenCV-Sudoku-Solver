@@ -35,9 +35,10 @@ type Props = {
   setGrid : (args :  number[][]) => void;
   message : string;
   setMessage : (args : string) => void;
+  highlightedCell? : {row: number, col: number} | null;
 };
 
-const SudokuGrid = ({grid, setGrid, message, setMessage} : Props) => {
+const SudokuGrid = ({grid, setGrid, message, setMessage, highlightedCell} : Props) => {
 
   const handleCellChange = (row : number, col : number, value : number) => {
     const newGrid = [...grid];
@@ -61,18 +62,29 @@ const SudokuGrid = ({grid, setGrid, message, setMessage} : Props) => {
     <StyledGridContainer container spacing={0}>
       {grid.map((row, rowIndex) => (
         <Grid container item key={rowIndex} justifyContent="center">
-          {row.map((cellValue, colIndex) => (
-            <StyledGridItem item key={colIndex}>
-              <TextField
-                variant="outlined"
-                size="small"
-                value={cellValue === 0 ? '' : cellValue}
-                onChange={(e) => handleCellChange(rowIndex, colIndex, +e.target.value || 0)}
-                inputProps={{ style: { textAlign: 'center' } }}
-                sx = {getBorderStyling(rowIndex, colIndex)}
-              />
-            </StyledGridItem>
-          ))}
+          {row.map((cellValue, colIndex) => {
+            const isHighlighted = highlightedCell && highlightedCell.row === rowIndex && highlightedCell.col === colIndex;
+            return (
+              <StyledGridItem item key={colIndex}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  value={cellValue === 0 ? '' : cellValue}
+                  onChange={(e) => handleCellChange(rowIndex, colIndex, +e.target.value || 0)}
+                  inputProps={{ style: { textAlign: 'center', color: isHighlighted ? 'blue' : 'inherit' } }}
+                  sx = {{
+                    ...getBorderStyling(rowIndex, colIndex),
+                    '& .MuiOutlinedInput-root': {
+                      backgroundColor: isHighlighted ? 'rgba(0, 0, 255, 0.1)' : 'inherit',
+                      '& fieldset': {
+                        borderColor: isHighlighted ? 'blue' : 'inherit',
+                      },
+                    },
+                  }}
+                />
+              </StyledGridItem>
+            );
+          })}
         </Grid>
       ))}
     </StyledGridContainer>
